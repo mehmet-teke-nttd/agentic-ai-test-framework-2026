@@ -1,0 +1,12 @@
+{
+  "pages": [
+    {
+      "page": "LoginPage",
+      "url": "mock-login.html"
+    },
+    {
+      "page": "DashboardPage",
+      "url": "mock-dashboard.html"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "components": [
+    {
+      "name": "AuthForm",
+      "pages": [
+        "LoginPage"
+      ],
+      "elements": [
+        {
+          "target": "UsernameInput",
+          "locatorType": "getByLabel",
+          "locatorValue": "Username"
+        },
+        {
+          "target": "PasswordInput",
+          "locatorType": "getByLabel",
+          "locatorValue": "Password"
+        },
+        {
+          "target": "LoginButton",
+          "locatorType": "getByRole",
+          "locatorValue": "button",
+          "name": "Login"
+        }
+      ]
+    }
+  ]
+}

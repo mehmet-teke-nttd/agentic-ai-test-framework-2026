@@ -1,0 +1,35 @@
+{
+  "elements": [
+    {
+      "target": "UsernameInput",
+      "page": "LoginPage",
+      "locatorType": "getByLabel",
+      "locatorValue": "Username"
+    },
+    {
+      "target": "PasswordInput",
+      "page": "LoginPage",
+      "locatorType": "getByLabel",
+      "locatorValue": "Password"
+    },
+    {
+      "target": "LoginButton",
+      "page": "LoginPage",
+      "locatorType": "getByRole",
+      "locatorValue": "button",
+      "name": "Login"
+    },
+    {
+      "target": "WelcomeMessage",
+      "page": "DashboardPage",
+      "locatorType": "getByTestId",
+      "locatorValue": "welcome-message"
+    },
+    {
+      "target": "DashboardPage",
+      "page": "DashboardPage",
+      "locatorType": "getByTestId",
+      "locatorValue": "dashboard"
+    }
+  ]
+}

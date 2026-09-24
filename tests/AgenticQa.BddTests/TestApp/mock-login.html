@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mock Login</title>
+  <style>
+    #dashboard { display: none; }
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+  </style>
+</head>
+<body>
+  <h1>Login</h1>
+  <label for="username">Username</label>
+  <input id="username" type="text" />
+
+  <label for="password">Password</label>
+  <input id="password" type="password" />
+
+  <button id="loginButton" type="button">Login</button>
+
+  <section id="dashboard" data-testid="dashboard">
+    <h2>Dashboard</h2>
+    <div data-testid="welcome-message">Welcome</div>
+  </section>
+
+  <script>
+    const button = document.getElementById('loginButton');
+    const dashboard = document.getElementById('dashboard');
+
+    button.addEventListener('click', () => {
+      dashboard.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "browser": "chromium",
+  "headless": false,
+  "baseUrl": "./TestApp/"
+}

@@ -1,0 +1,16 @@
+{
+  "elements": [
+    {
+      "target": "WelcomeMessage",
+      "page": "DashboardPage",
+      "locatorType": "getByTestId",
+      "locatorValue": "welcome-message"
+    },
+    {
+      "target": "DashboardPage",
+      "page": "DashboardPage",
+      "locatorType": "getByTestId",
+      "locatorValue": "dashboard"
+    }
+  ]
+}

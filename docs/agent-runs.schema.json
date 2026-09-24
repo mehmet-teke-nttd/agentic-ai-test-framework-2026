@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentic-qa.local/schemas/agent-runs.schema.json",
+  "title": "Agent Run Record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "runId",
+    "scenarioName",
+    "tags",
+    "testId",
+    "startedAt",
+    "completedAt",
+    "outcome",
+    "summary"
+  ],
+  "properties": {
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scenarioName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "testId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "testStatus": {
+      "type": "string",
+      "enum": [
+        "PASSED",
+        "FAILED",
+        "BLOCKED"
+      ]
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "escalationRequired": {
+      "type": "boolean"
+    },
+    "escalationLevel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "escalationReason": {
+      "type": "string"
+    },
+    "recommendedAction": {
+      "type": "string"
+    },
+    "resultFilePath": {
+      "type": "string"
+    },
+    "failureAnalysisPath": {
+      "type": "string"
+    },
+    "screenshotPath": {
+      "type": "string"
+    }
+  }
+}
