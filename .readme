@@ -10,7 +10,6 @@ This repository contains a .NET-based agentic testing framework for UI, API, and
 ## Project Layout
 
 - `src/AgenticQa.Core/` - core framework engine and services
-- `tests/AgenticQa.Core.UnitTests/` - unit tests
 - `tests/AgenticQa.BddTests/` - BDD/E2E scenarios and hooks
 - `config/ui/` - page, element, and component registries
 - `config/api/` - API endpoint registry
