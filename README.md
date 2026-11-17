@@ -1,23 +1,31 @@
 # Agentic AI Test Framework 2026
 
-This repository contains a .NET-based agentic testing framework for UI, API, and E2E workflows using:
+This repository contains a .NET test automation framework for UI, API, and E2E workflows with an agentic QA operating model:
 
-- intent -> contract -> execution architecture
-- registry-driven POM patterns (`config/ui`, `config/api`)
+- Intent -> contract -> execution architecture
+- Registry-driven page/API metadata (`config/ui`, `config/api`)
 - Reqnroll + NUnit + Playwright test execution
-- failure analysis, bug draft generation, and loop-based quality workflows
+- Failure analysis and defect draft workflows
+- Cursor command/agent orchestration under `.cursor/`
 
 ## Project Layout
 
-- `src/AgenticQa.Core/` - core framework engine and services
-- `tests/AgenticQa.BddTests/` - BDD/E2E scenarios and hooks
+- `src/AgenticQa.Core/` - framework engine, execution, analysis, and bug-drafting services
+- `tests/AgenticQa.BddTests/` - BDD scenarios, hooks, step definitions, and page objects
 - `config/ui/` - page, element, and component registries
 - `config/api/` - API endpoint registry
-- `artifacts/` - generated outputs (results, screenshots, analysis, agent-runs)
-- `.cursor/agents/` - QA orchestrator and specialist agent roles
-- `.cursor/rules/` - framework, Playwright, test generation, security, defect policies
-- `.cursor/commands/` - thin workflow entry points (`/generate-test`, `/run-test`, etc.)
-- `.cursor/skills/` - project skills (including quality, bug, and smoke loops)
+- `artifacts/` - run artifacts (results, screenshots, analysis, agent-runs)
+- `scripts/` - smoke gate and artifact validation scripts
+- `.cursor/agents/` - QA orchestrator and specialist role prompts
+- `.cursor/commands/` - workflow entry points (`/generate-test`, `/run-test`, etc.)
+- `.cursor/skills/` - project skills supporting generation, execution, triage, and loops
+- `.cursor/rules/` - QA framework, defect creation, Playwright, and security policies
+
+## Prerequisites
+
+- .NET SDK supporting `net10.0`
+- Playwright browser binaries for local UI execution
+- (Optional for Cursor MCP browser automation) Node.js 18+ for `npx`
 
 ## Common Commands
 
@@ -25,51 +33,55 @@ This repository contains a .NET-based agentic testing framework for UI, API, and
   - `dotnet test`
 - Run smoke tests:
   - `dotnet test --filter "TestCategory=smoke"`
-- Run mandatory smoke gate:
+- Run login tests:
+  - `dotnet test --filter "TestCategory=login"`
+- Enforce mandatory UI smoke gate:
   - `./scripts/run-mandatory-smoke.ps1`
-- Validate agent-run artifacts:
+- Validate required agent-run artifacts:
   - `./scripts/validate-agent-runs.ps1 -RequireFiles`
+
+If Playwright browser binaries are missing, install Chromium from the test output:
+
+- `pwsh tests/AgenticQa.BddTests/bin/Debug/net10.0/playwright.ps1 install chromium`
 
 ## Configuration
 
-- UI test base URL:
-  - `tests/AgenticQa.BddTests/appsettings.json` (`testSettings.publicBaseUrl`; `testSettings.baseUrl` still supported for backward compatibility)
-- Mock login app base path:
-  - `tests/AgenticQa.BddTests/appsettings.json` (`testSettings.mockAppBasePath`; falls back to `browser-settings.json` `baseUrl`)
-- Browser settings:
+- Test app and URLs:
+  - `tests/AgenticQa.BddTests/appsettings.json`
+  - `testSettings.publicBaseUrl`
+  - `testSettings.mockAppBasePath`
+  - `testSettings.baseUrl` (legacy/backward-compatible)
+- Browser defaults:
   - `tests/AgenticQa.BddTests/browser-settings.json`
-- Login credentials:
-  - Environment variables `QA_USERNAME` and `QA_PASSWORD` are required for login scenarios.
+
+Environment variables:
+
+- `QA_USERNAME` and `QA_PASSWORD` are required for login scenarios.
+- `QA_REQUIRE_UI_SMOKE=true` can force mandatory smoke behavior in CI test commands.
+- `QA_ALLOW_UI_SKIP=true` can allow UI scenario skipping in non-browser environments.
 
 ## Agentic QA in Cursor
 
 - Coordinator: `.cursor/agents/qa-orchestrator.md`
-- Commands (project convention): `/generate-test`, `/run-test`, `/analyze-failure`, `/repair-locator`, `/create-bug` — see `.cursor/commands/`
-- Skill index: `.cursor/skills/README.md`
+- Primary commands:
+  - `/generate-test`
+  - `/run-test`
+  - `/analyze-failure`
+  - `/repair-locator`
+  - `/create-bug`
+- Skill index and workflow details: `.cursor/skills/README.md`
 
-## Notes
+## Schema and Artifact Notes
 
-- `artifacts/` and build outputs are excluded from source control via `.gitignore`.
-- Agent-run JSON format is documented in:
-  - `docs/agent-runs-schema.md`
+- Agent-run JSON schema: `docs/agent-runs-schema.md`
+- Generated outputs (`artifacts/`, `TestResults/`, build output folders) are git-ignored by default.
 
 ## Playwright MCP (Cursor)
 
-This framework now includes workspace MCP config at `.cursor/mcp.json`:
+Workspace MCP is configured in `.cursor/mcp.json` using the `playwright` server (`npx -y @playwright/mcp@latest`).
 
-- Server name: `playwright`
-- Launch command: `npx -y @playwright/mcp@latest`
+One-time setup:
 
-### One-time setup (Windows)
-
-1. Install Node.js 18+ (includes `npm`/`npx`):
-   - [https://nodejs.org/](https://nodejs.org/)
-2. Reload Cursor in this workspace so MCP servers are re-discovered.
-3. Use the agent with prompts like:
-   - `Use Playwright MCP to open https://demo.playwright.dev/todomvc`
-
-### Optional: install browser dependencies used by tests
-
-For .NET Playwright test execution in this repo, install Chromium binaries if needed:
-
-- `pwsh tests/AgenticQa.BddTests/bin/Debug/net10.0/playwright.ps1 install chromium`
+1. Install Node.js 18+ from [nodejs.org](https://nodejs.org/).
+2. Reload Cursor so workspace MCP servers are discovered.
+3. Use prompts such as: `Use Playwright MCP to open https://demo.playwright.dev/todomvc`.
