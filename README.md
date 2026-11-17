@@ -74,6 +74,7 @@ Environment variables:
 ## Schema and Artifact Notes
 
 - Agent-run JSON schema: `docs/agent-runs-schema.md`
+- Agent architecture and hierarchy map: `docs/agent-architecture-map.md`
 - Generated outputs (`artifacts/`, `TestResults/`, build output folders) are git-ignored by default.
 
 ## Playwright MCP (Cursor)
