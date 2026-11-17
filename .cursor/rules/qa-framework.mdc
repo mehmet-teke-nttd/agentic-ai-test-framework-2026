@@ -1,0 +1,17 @@
+---
+description: Agentic QA framework architecture, reuse, and change boundaries for this repository
+alwaysApply: true
+---
+
+# QA Framework Rules
+
+- Follow existing repository architecture: intent → contract → execution in `src/AgenticQa.Core`, BDD in `tests/AgenticQa.BddTests`, registries in `config/ui` and `config/api`.
+- Prefer reuse: search for existing features, step definitions, Page Objects, and registry entries before adding new automation.
+- Avoid duplicate helper methods; extend existing support types under `tests/AgenticQa.BddTests/Support/` when needed.
+- Maintain separation: Gherkin/features, step bindings, page objects, test data, and assertions stay in their layers.
+- Use async/await correctly in Playwright and step definitions; do not block on `.Result` or `.Wait()`.
+- Keep assertions readable and deterministic; do not hide failures or weaken assertions to obtain green runs.
+- Do not modify production application code to satisfy a test unless the user explicitly authorizes it.
+- Make the smallest necessary change; run the smallest relevant `dotnet test` filter after automation changes.
+- Artifacts live under `artifacts/` (results, failure-analysis, screenshots, agent-runs); reference paths in triage output.
+- Test IDs follow `TC-<AREA>-<NNN>` when creating new intent-backed cases.

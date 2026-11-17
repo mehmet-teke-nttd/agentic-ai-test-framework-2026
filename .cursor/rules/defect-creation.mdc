@@ -1,0 +1,26 @@
+---
+description: When test failures may become product defects vs drafts for human review
+alwaysApply: true
+---
+
+# Defect Creation Rules
+
+**Core rule:** test failure ≠ product defect.
+
+Failure sources include product bug, automation bug, locator problem, test data, environment, configuration, network/API, dependency, or flaky behavior.
+
+Automatic defect submission is forbidden unless policy explicitly permits and all safety checks pass.
+
+Recommended automatic-creation threshold (if ever enabled):
+
+- Classification maps to product defect (`PRODUCT_DEFECT` / `PRODUCT_BUG`)
+- Confidence ≥ 0.95
+- Reproduced == true
+- Duplicate == false
+- Flaky == false
+
+Otherwise produce a **draft** for human review (`NEEDS_REVIEW`, `DRAFT`, or `NO_BUG_YET`).
+
+Use skill `create-defect` and core services in `AgenticQa.Core/BugDrafting/`; Bdd hooks do not register full ADO creation by default—respect dry-run and approval gates.
+
+Do not file defects for classifications that map to automation, locator, test data, environment, or requirement issues without QA confirmation.

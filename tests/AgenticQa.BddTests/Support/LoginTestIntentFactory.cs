@@ -7,8 +7,12 @@ public static class LoginTestIntentFactory
 {
     public static TestIntent Create()
     {
-        var username = Environment.GetEnvironmentVariable("QA_USERNAME") ?? "testuser";
-        var password = Environment.GetEnvironmentVariable("QA_PASSWORD") ?? "testpassword";
+        var username = Environment.GetEnvironmentVariable("QA_USERNAME");
+        var password = Environment.GetEnvironmentVariable("QA_PASSWORD");
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            throw new InvalidOperationException("QA_USERNAME and QA_PASSWORD environment variables are required.");
+        }
 
         return new TestIntent
         {

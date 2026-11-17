@@ -1,0 +1,19 @@
+---
+description: Secret handling for tests, artifacts, defects, and agent outputs
+alwaysApply: true
+---
+
+# Security Rules
+
+Never expose or hard-code in source or generated content:
+
+- Passwords, tokens, API keys, connection strings with secrets, personal credentials, private certificates.
+
+Use the repository's existing mechanisms:
+
+- Environment variables for test credentials (`QA_USERNAME`, `QA_PASSWORD`).
+- Azure DevOps PAT via `AZURE_DEVOPS_PAT` when bug creation is configured (core defaults to dry-run).
+
+Never print secrets into logs, test reports, defect descriptions, or agent-run JSON under `artifacts/`.
+
+When drafting defects or failure summaries, redact credential values and reference env var names only.

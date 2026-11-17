@@ -2,12 +2,10 @@ using AgenticQa.BddTests.Support;
 using AgenticQa.Core.DependencyInjection;
 using AgenticQa.Core.Enums;
 using AgenticQa.Core.Interfaces;
-using AgenticQa.Core.Serialization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Playwright;
 using Reqnroll;
 using Reqnroll.BoDi;
-using System.Text.Json;
 
 namespace AgenticQa.BddTests.Hooks;
 
@@ -42,8 +40,6 @@ public sealed class QaFrameworkHooks
         var pageRegistryPath = Path.Combine(outputRoot, "config", "ui", "page-registry.json");
         var componentRegistryPath = Path.Combine(outputRoot, "config", "ui", "component-registry.json");
         var apiEndpointRegistryPath = Path.Combine(outputRoot, "config", "api", "endpoint-registry.json");
-        var browserSettingsPath = Path.Combine(outputRoot, "browser-settings.json");
-        var appSettingsPath = Path.Combine(outputRoot, "appsettings.json");
         var artifactsRoot = Path.GetFullPath(Path.Combine(outputRoot, "..", "..", "..", "..", "artifacts"));
         var resultOutputDirectory = Path.Combine(artifactsRoot, "results");
         var failureAnalysisOutputDirectory = Path.Combine(artifactsRoot, "failure-analysis");
@@ -51,10 +47,7 @@ public sealed class QaFrameworkHooks
         Directory.CreateDirectory(resultOutputDirectory);
         Directory.CreateDirectory(failureAnalysisOutputDirectory);
 
-        var browserSettingsJson = File.ReadAllText(browserSettingsPath);
-        var browserSettings = AgenticJsonSerializer.Deserialize<BrowserSettings>(browserSettingsJson) ?? new BrowserSettings();
-        var configuredBaseUrl = ResolveConfiguredBaseUrl(appSettingsPath, browserSettings.BaseUrl);
-        var baseUrl = ResolveBaseUrl(configuredBaseUrl, outputRoot);
+        var baseUrl = TestSettingsResolver.ResolveAbsoluteBaseUrl(outputRoot);
 
         var services = new ServiceCollection();
         services.AddLogging();
@@ -82,9 +75,7 @@ public sealed class QaFrameworkHooks
     public async Task CreateBrowserResourcesAsync()
     {
         var outputRoot = AppContext.BaseDirectory;
-        var browserSettingsPath = Path.Combine(outputRoot, "browser-settings.json");
-        var browserSettings = AgenticJsonSerializer.Deserialize<BrowserSettings>(
-            await File.ReadAllTextAsync(browserSettingsPath)) ?? new BrowserSettings();
+        var browserSettings = TestSettingsResolver.LoadBrowserSettings(outputRoot);
 
         try
         {
@@ -107,16 +98,18 @@ public sealed class QaFrameworkHooks
         }
         catch (Exception ex)
         {
-            var requiresStrictSmoke =
-                (_scenarioContext?.ScenarioInfo.Tags.Contains("smoke", StringComparer.OrdinalIgnoreCase) ?? false) &&
-                string.Equals(Environment.GetEnvironmentVariable("QA_REQUIRE_UI_SMOKE"), "true", StringComparison.OrdinalIgnoreCase);
-
-            if (requiresStrictSmoke)
+            var allowSkip = string.Equals(
+                Environment.GetEnvironmentVariable("QA_ALLOW_UI_SKIP"),
+                "true",
+                StringComparison.OrdinalIgnoreCase);
+            if (allowSkip)
             {
-                Assert.Fail($"Playwright browser initialization failed for mandatory smoke scenario: {ex.Message}");
+                Assert.Ignore($"Playwright browser could not be initialized for this environment: {ex.Message}");
             }
 
-            Assert.Ignore($"Playwright browser could not be initialized for this environment: {ex.Message}");
+            Assert.Fail(
+                $"Playwright browser initialization failed: {ex.Message}. " +
+                "Set QA_ALLOW_UI_SKIP=true to opt into skipping UI scenarios in environments without browser support.");
         }
     }
 
@@ -175,49 +168,6 @@ public sealed class QaFrameworkHooks
         }
     }
 
-    private static string ResolveBaseUrl(string baseUrl, string outputRoot)
-    {
-        if (Uri.TryCreate(baseUrl, UriKind.Absolute, out var absolute))
-        {
-            return absolute.ToString();
-        }
-
-        var absolutePath = Path.GetFullPath(Path.Combine(outputRoot, baseUrl));
-        return new Uri(AppendDirectorySeparator(absolutePath)).ToString();
-    }
-
-    private static string AppendDirectorySeparator(string path) =>
-        path.EndsWith(Path.DirectorySeparatorChar)
-            ? path
-            : path + Path.DirectorySeparatorChar;
-
-    private static string ResolveConfiguredBaseUrl(string appSettingsPath, string fallbackBaseUrl)
-    {
-        if (!File.Exists(appSettingsPath))
-        {
-            return fallbackBaseUrl;
-        }
-
-        using var json = JsonDocument.Parse(File.ReadAllText(appSettingsPath));
-        var root = json.RootElement;
-        if (root.TryGetProperty("testSettings", out var testSettings)
-            && testSettings.TryGetProperty("baseUrl", out var nestedBaseUrl)
-            && nestedBaseUrl.ValueKind == JsonValueKind.String
-            && !string.IsNullOrWhiteSpace(nestedBaseUrl.GetString()))
-        {
-            return nestedBaseUrl.GetString()!;
-        }
-
-        if (root.TryGetProperty("baseUrl", out var directBaseUrl)
-            && directBaseUrl.ValueKind == JsonValueKind.String
-            && !string.IsNullOrWhiteSpace(directBaseUrl.GetString()))
-        {
-            return directBaseUrl.GetString()!;
-        }
-
-        return fallbackBaseUrl;
-    }
-
     private async Task PersistAgentRunAsync()
     {
         var artifactsRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "artifacts"));
@@ -237,7 +187,7 @@ public sealed class QaFrameworkHooks
             TestStatus = _qaScenarioContext.TestExecutionResult?.Status,
             StartedAt = _qaScenarioContext.ScenarioStartedAt,
             CompletedAt = DateTimeOffset.UtcNow,
-            Outcome = _scenarioContext?.TestError is null ? "PASSED_OR_SKIPPED" : "FAILED",
+            Outcome = ResolveOutcome(),
             Summary = analysis?.Summary
                 ?? _scenarioContext?.TestError?.Message
                 ?? "Scenario completed without failure analysis output.",
@@ -252,5 +202,18 @@ public sealed class QaFrameworkHooks
         };
 
         _qaScenarioContext.AgentRunPath = await AgentRunRecorder.SaveAsync(agentRunDirectory, record);
+    }
+
+    private string ResolveOutcome()
+    {
+        var testError = _scenarioContext?.TestError;
+        if (testError is null)
+        {
+            return "PASSED";
+        }
+
+        return testError is IgnoreException or InconclusiveException
+            ? "SKIPPED"
+            : "FAILED";
     }
 }

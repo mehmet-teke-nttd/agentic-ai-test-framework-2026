@@ -1,0 +1,23 @@
+---
+description: Standards for generating and extending automated tests in this framework
+globs: tests/**/*.cs,tests/**/*.feature
+alwaysApply: false
+---
+
+# Test Generation Rules
+
+Every generated automated test should be:
+
+- Understandable, deterministic, isolated where practical, maintainable, and traceable to a requirement.
+- Explicit about expected behavior; do not invent requirements silently—report ambiguity.
+
+Before implementation:
+
+1. Search for an existing scenario in `tests/AgenticQa.BddTests/Features/`.
+2. Check whether an existing scenario can be extended with new examples or tags.
+3. Reuse Page Objects in `Pages/` and existing step definitions; avoid ambiguous duplicate Reqnroll bindings.
+4. For contract-driven flows, produce or extend `TestIntent` JSON (`schemaVersion` `1.0`) before mapping to `ExecutionContract`.
+
+Reqnroll tags map to NUnit `TestCategory` (e.g. `@smoke` → `TestCategory=smoke`). Align with skill `tag-and-prioritize-tests` when adding `@Regression`, `@Risk:*`, or `@Requirement:*`.
+
+Sensitive values: use environment variables (`QA_USERNAME`, `QA_PASSWORD`) or placeholders in intent `testData`, not hard-coded secrets.

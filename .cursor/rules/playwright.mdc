@@ -1,0 +1,32 @@
+---
+description: Playwright locator strategy and synchronization for UI tests and Page Objects
+globs: tests/**/*.cs,config/ui/**
+alwaysApply: false
+---
+
+# Playwright Rules
+
+## Locator preference (highest to lowest)
+
+1. `GetByRole`
+2. `GetByLabel`
+3. `GetByTestId`
+4. `GetByPlaceholder`
+5. `GetByText`
+6. Stable CSS
+7. XPath only as a last resort
+
+## Do not use
+
+- `Thread.Sleep(...)` for synchronization.
+- Brittle selectors: dynamic IDs, generated CSS classes, DOM position, `nth-child`, deeply nested chains.
+
+## Prefer
+
+- Playwright auto-waiting and explicit assertions (`Expect`, NUnit `Assert` after awaited state).
+- Centralized locators in Page Objects under `tests/AgenticQa.BddTests/Pages/` and registry entries in `config/ui/element-registry.json` when the execution engine path is used.
+- `Task.Delay` only for non-UI timing requirements with a documented reason.
+
+## Registry alignment
+
+When updating UI automation used by the core engine, keep `config/ui/page-registry.json`, `element-registry.json`, and `component-registry.json` consistent with Page Object semantics.

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "C:\\Users\\266813\\source\\repos\\agentic-ai-test-framework-2026\\.cursor\\mcp-servers\\playwright\\node_modules\\@playwright\\mcp\\cli.js"
+      ]
+    }
+  }
+}

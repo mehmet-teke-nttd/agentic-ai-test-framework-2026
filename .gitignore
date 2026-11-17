@@ -20,3 +20,6 @@ Thumbs.db
 
 # Playwright caches in build output
 .playwright/
+
+# Local MCP server dependencies
+.cursor/mcp-servers/

@@ -126,120 +126,16 @@ this.ScenarioInitialize(scenarioInfo);
             {
                 await this.ScenarioStartAsync();
 #line 5
-  await testRunner.GivenAsync("the user has a valid login test intent", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+  await testRunner.GivenAsync("the user is on the login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 6
-  await testRunner.WhenAsync("the test intent is validated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+  await testRunner.WhenAsync("the user logs in with valid credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 7
-  await testRunner.AndAsync("the execution contract is generated", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+  await testRunner.ThenAsync("the dashboard should be visible", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 8
-  await testRunner.AndAsync("the execution contract is executed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 9
-  await testRunner.ThenAsync("the overall test result should be PASSED", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 10
-  await testRunner.AndAsync("a result file should be written", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Login verification fails")]
-        [NUnit.Framework.CategoryAttribute("ui")]
-        [NUnit.Framework.CategoryAttribute("login")]
-        public async global::System.Threading.Tasks.Task LoginVerificationFails()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "ui",
-                    "login"};
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Login verification fails", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 13
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 14
-  await testRunner.GivenAsync("the user has a valid login test intent", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 15
-  await testRunner.WhenAsync("the test intent is validated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 16
-  await testRunner.AndAsync("the execution contract is generated", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 17
-  await testRunner.AndAsync("the execution contract is configured to force a verification failure", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 18
-  await testRunner.AndAsync("the execution contract is executed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 19
-  await testRunner.ThenAsync("the overall test result should be FAILED", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 20
-  await testRunner.AndAsync("dependent steps should be skipped", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 21
-  await testRunner.AndAsync("a result file should be written", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-            }
-            await this.ScenarioCleanupAsync();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Login execution is blocked by missing target")]
-        [NUnit.Framework.CategoryAttribute("ui")]
-        [NUnit.Framework.CategoryAttribute("login")]
-        public async global::System.Threading.Tasks.Task LoginExecutionIsBlockedByMissingTarget()
-        {
-            string[] tagsOfScenario = new string[] {
-                    "ui",
-                    "login"};
-            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Login execution is blocked by missing target", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 24
-this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                await this.ScenarioStartAsync();
-#line 25
-  await testRunner.GivenAsync("the user has a valid login test intent", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
-#line hidden
-#line 26
-  await testRunner.WhenAsync("the test intent is validated", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 27
-  await testRunner.AndAsync("the execution contract is generated", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 28
-  await testRunner.AndAsync("the execution contract is configured with an unregistered target", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 29
-  await testRunner.AndAsync("the execution contract is executed", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 30
-  await testRunner.ThenAsync("the overall test result should be BLOCKED", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 31
-  await testRunner.AndAsync("dependent steps should be skipped", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 32
-  await testRunner.AndAsync("a result file should be written", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+  await testRunner.AndAsync("the welcome message should be \"Welcome\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

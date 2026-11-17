@@ -9,6 +9,13 @@ public class ScenarioStateTests
     [Test]
     public void QaScenarioContext_HoldsStronglyTypedState()
     {
+        var originalUsername = Environment.GetEnvironmentVariable("QA_USERNAME");
+        var originalPassword = Environment.GetEnvironmentVariable("QA_PASSWORD");
+        Environment.SetEnvironmentVariable("QA_USERNAME", "integration-user");
+        Environment.SetEnvironmentVariable("QA_PASSWORD", "integration-password");
+
+        try
+        {
         var state = new QaScenarioContext
         {
             TestIntent = LoginTestIntentFactory.Create(),
@@ -28,5 +35,11 @@ public class ScenarioStateTests
         Assert.That(state.TestIntent, Is.Not.Null);
         Assert.That(state.ValidationResult?.Status, Is.EqualTo(ValidationStatus.Valid));
         Assert.That(state.ExecutionContract, Is.Not.Null);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("QA_USERNAME", originalUsername);
+            Environment.SetEnvironmentVariable("QA_PASSWORD", originalPassword);
+        }
     }
 }

@@ -13,6 +13,9 @@ public class HookLifecycleTests
     [Test]
     public async Task BrowserHook_CreatesPage_WhenEnvironmentSupportsPlaywright()
     {
+        var originalAllowUiSkip = Environment.GetEnvironmentVariable("QA_ALLOW_UI_SKIP");
+        Environment.SetEnvironmentVariable("QA_ALLOW_UI_SKIP", "true");
+
         var container = new ObjectContainer();
         var context = new QaScenarioContext();
         var browserContext = new BrowserSessionContext();
@@ -30,6 +33,7 @@ public class HookLifecycleTests
         finally
         {
             await hooks.CleanupScenarioAsync();
+            Environment.SetEnvironmentVariable("QA_ALLOW_UI_SKIP", originalAllowUiSkip);
         }
 
         Assert.That(browserContext.Page, Is.Not.Null);
